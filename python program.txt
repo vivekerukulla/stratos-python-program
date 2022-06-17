@@ -1,0 +1,84 @@
+import pandas as pd
+
+df = pd.read_excel(r'C:\Users\Avinash\OneDrive\Desktop\New folder\Programming Exercise Data.xlsx',sheet_name = 0)
+#print(df['Country Name'])
+
+print("Q1.)What data structure(s) could you store this data in? What are the benefits of storing in each of the data structures you can think of?")
+
+print("ANS:)")
+print("As per the Data sheet we required data as country name and year wise popoluation and it's nothing but a sequential data so we can use collection/sequential of elements data type in order to store the data.")
+
+print("#"*20)
+
+print("Q2.)Write a program/function to find the country/region with the highest and lowest population in a given year. Take the year as input from the user or from the command line.\nResult:\n")
+def get_max_min_population_on_year(year:int):
+try:
+if not year in df.columns:
+
+raise Exception("year not found")
+d = df.loc[df[year]==df[year].max()]
+print("Population in:",year)
+print("max population based on year",d['Country Name'].to_numpy().tolist()[0],d[year].to_numpy().tolist()[0])
+
+d = df.loc[df[year]==df[year].min()]
+print("min population based on year",d['Country Name'].to_numpy().tolist()[0],d[year].to_numpy().tolist()[0])
+except Exception as err:
+print(err)
+
+get_max_min_population_on_year(1969)
+
+print("#"*20)
+print("Q3.)Write a program/function to find the country/region with the highest and lowest population growth percentage from 1960 to 2020\nResult:\n")
+#100 * (2020 population - 1960 population) / 1960 population
+def get_high_lowest_growth_perctange():
+pop_2020 = df[2020].sum()
+print("2020 population",pop_2020)
+pop_1960 = df[1960].sum()
+print("1960 population",pop_1960)
+
+res = 100 *(pop_2020 - pop_1960)/pop_1960
+print("growth percentage from 1960 to 2020",res)
+
+
+
+get_high_lowest_growth_perctange()
+
+print("#"*20)
+
+print("Q4. Modify the above program/function to take the starting and ending years as inputs from the user or from the command line.\nResult:\n")
+
+def get_high_lowest_growth_perctange_b_w_years(start_year,end_year):
+pop_start = df[start_year].sum()
+print("2020 population",pop_start)
+pop_end = df[end_year].sum()
+print("1960 population",pop_end)
+
+res = 100 *(pop_start - pop_end)/pop_end
+print("growth percentage from %s to %s :%s"%(start_year,end_year,res))
+
+get_high_lowest_growth_perctange_b_w_years(2019,1963)
+
+print("#"*20)
+print("Q5. Write a program/function to caclulate a country’s population a few years from now. Take country name and number of years as inputs from user or from command line. Use the average growth rate in the last x years as the growth rate for the period. Let x be a constant defined in the program/function or in a property file.\n")
+
+def get_country_population(country_name:str,num_of_years):
+try:
+d=df[df['Country Name']==country_name]
+d1 = {i:j[h] for i,j in d.to_dict().items() for h in j}
+#print(d1)
+if num_of_years>60:
+num_of_years = 60
+val = 2020
+year_list = [val]
+l = []
+for i in range(num_of_years):
+#print(d1[val])
+l.append(d1[val])
+val=val-1
+year_list.append(val)
+avg = sum(l)/len(l)
+print("Avg growth rate of these year(s)%s :::%s "%(' '.join(list(map(str,year_list))),avg))
+except Exception as err:
+print(err)
+
+get_country_population("South Africa",6)
